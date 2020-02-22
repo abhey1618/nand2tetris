@@ -16,5 +16,13 @@ CHIP PC {
     OUT out[16];
 
     PARTS:
+    //We will go in the reverse way for this
+    Inc16(in = fout, out = incout);
+    Mux16(a = fout, b = incout, sel = inc, out = out1);
+
+    //Load
+    Mux16(a = out1, b = in, sel = load, out = out2);
+    Mux16(a = out2, b = false, sel = reset, out = out3);
+    Register(in = out3, load = true, out = fout, out = out);
     // Put your code here:
 }
