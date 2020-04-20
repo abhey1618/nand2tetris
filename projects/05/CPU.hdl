@@ -31,7 +31,7 @@ CHIP CPU {
         instruction[16], // Instruction for execution
         reset;           // Signals whether to re-start the current
                          // program (reset==1) or continue executing
-                         // the current program (reset==0).
+                         // the curren program (reset==0).
 
     OUT outM[16],        // M value output
         writeM,          // Write to M? 
@@ -40,4 +40,29 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
+    Not(in=instruction[15],out=isA); //if(instruction[15]==0) isA=true
+    Not(in=isA,out=isC);
+    And(a=isC,b=instruction[5],out=isCtoA);
+    Mux16(a=instruction,b=ALUout,sel=isCtoA,out=inAreg);
+    Or(a=isCtoA,b=isA,out=loadA);
+    ARegister(in=inAreg,load=loadA,out=outAreg,out[0..14]=addressM);
+
+    And(a=isC,b=instruction[4],out=loadD);
+    DRegister(in=ALUout,load=loadD,out=outDreg);
+    Mux16(a=outAreg,b=inM,sel=instruction[12],out=AorM);
+
+    ALU(x=outDreg,y=AorM,zx=instruction[11],nx=instruction[10],zy=instruction[9], ny=instruction[8],f=instruction[7],no=instruction[6],out=ALUout,out=outM,zr=zr,ng=ng);
+    Not(in=zr,out=nzr);
+    Not(in=ng,out=nonng);
+    And(a=nzr,b=nonng,out=pos);
+
+    And(a=isC,b=instruction[3],out=writeM);
+    And(a=zr,b=instruction[1],out=JEQ);
+    And(a=ng,b=instruction[2],out=JLT);
+    And(a=pos,b=instruction[0],out=JGT);
+
+    Or(a=JLT,b=JEQ,out=JLE);
+    Or(a=JLE,b=JGT,out=isJump);
+    And(a=isJump,b=isC,out=loadPC);
+    PC(in=outAreg,load=loadPC,inc=true,reset=reset,out[0..14]=pc);
 }
