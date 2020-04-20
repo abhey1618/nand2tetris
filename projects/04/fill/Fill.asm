@@ -12,3 +12,56 @@
 // the screen should remain fully clear as long as no key is pressed.
 
 // Put your code here.
+
+(WHILE)
+	@SCREEN
+	D=A
+	@pixel //A VARIABLE WHICH TELLS US WHERE TO START
+	M=D
+	
+	@KBD
+	D=M //CHECK FOR INPUT
+	@ST1 //WHITEN
+	D;JEQ
+	@ST2 //DARKEN
+	0;JMP
+
+	(ST1)
+	@KBD
+	D=A
+	@pixel
+	D=D-M
+	@WHILE //GOES BACK TO START
+	D;JEQ
+	@pixel
+	A=M
+	M=0
+	@pixel
+	M=M+1
+	@KBD
+	D=M
+	@WHILE
+	D;JGT
+	@ST1
+	0;JMP
+
+	(ST2)
+	@KBD
+	D=A
+	@pixel
+	D=D-M
+	@WHILE //GOES BACK TO START
+	D;JEQ
+	@pixel
+	A=M
+	M=-1
+	@pixel
+	M=M+1
+	@KBD
+	D=M
+	@WHILE
+	D;JEQ
+	@ST2
+	0;JMP
+
+(ENDWHILE)
