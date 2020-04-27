@@ -39,6 +39,11 @@ CodeWriter::~CodeWriter()
 	if(fout.is_open()) fout.close();
 }
 
+void CodeWriter::Close()
+{
+	if(fout.is_open()) fout.close();
+}
+
 void CodeWriter::setFileName(string filename)
 {
 	if(fout.is_open()) fout.close();
@@ -172,12 +177,12 @@ void CodeWriter::pop(string loc, int index)
 	{
 		fout << "@" << loc << endl << "D=A" << endl << "@" << index << endl << "D=D+A" << endl;
 		fout << "@R13" << endl << "M=D" << endl << "@SP" << endl << "AM=M-1" << endl << "D=M" << endl;
-		fout << "D=M" << endl << "@R13" << endl << "A=M" << endl << "M=D" << endl;
+		fout << "@R13" << endl << "A=M" << endl << "M=D" << endl;
 	}
 	else
 	{
 		fout << "@" << loc << endl << "D=M" << endl << "@" << index << endl << "D=D+A" << endl;
 		fout << "@R13" << endl << "M=D" << endl << "@SP" << endl << "AM=M-1" << endl << "D=M" << endl;
-		fout << "D=M" << endl << "@R13" << endl << "A=M" << endl << "M=D" << endl;
+		fout << "@R13" << endl << "A=M" << endl << "M=D" << endl;
 	}
 }

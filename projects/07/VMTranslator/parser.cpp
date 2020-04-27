@@ -35,6 +35,13 @@ void Parser::advance()
 		{
 			getline(fin, current_command);
 		}
+		if(!hasMoreCommands()) return;
+		int index=current_command.find("//",0);
+		current_command=current_command.substr(0,index);
+		while(current_command.substr(current_command.length()-1,1)==" ")
+		{
+			current_command=current_command.substr(0,current_command.length()-1);
+		}
 	}
 }
 
